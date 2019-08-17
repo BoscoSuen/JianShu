@@ -5,6 +5,7 @@ import { HeaderWrapper, Logo, Nav, NavItem, NavSearch,
     SearchInfoSwitch, SearchInfoItem, SearchInfoList} from './style';
 import { CSSTransition } from 'react-transition-group';
 import { actionCreators } from './store';
+import { actionCreators as loginActionCreators} from '../../pages/login/store';
 import {Link} from "react-router-dom";   // 单引用路由
 
 class Header extends Component {
@@ -47,7 +48,7 @@ class Header extends Component {
     }
 
     render() {
-        const { focused, handleInputFocus, handleInputBlur, list } = this.props;
+        const { focused, handleInputFocus, handleInputBlur, list, login, logout } = this.props;
         return (
             <HeaderWrapper>
                 <Link to='/'>
@@ -56,7 +57,11 @@ class Header extends Component {
                 <Nav>
                     <NavItem className='left active'>Home</NavItem>
                     <NavItem className='left'>Download App</NavItem>
-                    <NavItem className='right'>Sign in</NavItem>
+                    {
+                        login ?
+                            <NavItem onClick={logout} className='right'>Log out</NavItem> :
+                            <Link to='/login'><NavItem className='right'>Log in</NavItem></Link>
+                    }
                     <NavItem className='right'>
                         <i className='iconfont'>&#xe636;</i>
                     </NavItem>
@@ -79,10 +84,12 @@ class Header extends Component {
                     </SearchWrapper>
                 </Nav>
                 <Addition>
-                    <Button className='writing'>
-                        <i className="iconfont">&#xe607;</i>
-                        New Article
-                    </Button>
+                    <Link to='/write'>
+                        <Button className='writing'>
+                            <i className="iconfont">&#xe607;</i>
+                            New Article
+                        </Button>
+                    </Link>
                     <Button className='reg'>Sign Up</Button>
                 </Addition>
             </HeaderWrapper>
@@ -96,7 +103,8 @@ const mapStateToProps = (state) => {
         list: state.getIn(['header', 'list']),
         page: state.getIn(['header', 'page']),
         totalPage: state.getIn(['header', 'totalPage']),
-        mouseIn: state.getIn(['header', 'mouseIn'])
+        mouseIn: state.getIn(['header', 'mouseIn']),
+        login: state.getIn(['login', 'login'])
     }
 }
 
@@ -126,6 +134,9 @@ const mapDispatchToProps = (dispatch) => {
             }
             spin.style.transform = 'rotate(' + (originAngle + 360) + 'deg)';
             dispatch(actionCreators.changePage(page < totalPage ? page + 1 : 1));
+        },
+        logout() {
+            dispatch(loginActionCreators.logout());
         }
     }
 }
