@@ -5,6 +5,7 @@ import { HeaderWrapper, Logo, Nav, NavItem, NavSearch,
     SearchInfoSwitch, SearchInfoItem, SearchInfoList} from './style';
 import { CSSTransition } from 'react-transition-group';
 import { actionCreators } from './store';
+import {Link} from "react-router-dom";   // 单引用路由
 
 class Header extends Component {
 
@@ -49,7 +50,9 @@ class Header extends Component {
         const { focused, handleInputFocus, handleInputBlur, list } = this.props;
         return (
             <HeaderWrapper>
-                <Logo />
+                <Link to='/'>
+                    <Logo />
+                </Link>
                 <Nav>
                     <NavItem className='left active'>Home</NavItem>
                     <NavItem className='left'>Download App</NavItem>
